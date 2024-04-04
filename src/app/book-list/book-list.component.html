@@ -1,0 +1,57 @@
+
+
+
+
+<div class="container">
+    <div class="row">
+    <div class="col">
+        <h1 class="mt-5 mb-5">Listado de libros</h1>
+        @if(showDeletedBookMessage){
+            <ngb-alert type="success" (closed)="hideDeletedBookMessage()">Libro borrado correctamente</ngb-alert>
+        }
+    <table class="table">
+    <thead>
+    <tr>
+    <th scope="col">Id</th>
+    <th scope="col">Título</th>
+    <th scope="col">ISBN</th>
+    <th scope="col">Precio (€)</th>
+    <th scope="col">Publicado</th>
+    <th scope="col">Fecha de lanzamiento</th>
+    <th scope="col">Autor</th>
+    <th scope="col">Editorial</th>
+    <th scope="col">Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    @for (book of books; track book.id) {
+    <tr>
+    <th scope="row">{{book.id}}</th>
+    <td>{{book.title}}</td>
+ <!--    <td>
+    @if (product.available) {
+    <span class="badge text-bg-success">Sí</span>
+    } @else{
+    <span class="badge text-bg-danger">No</span>
+    }
+    </td> -->
+    <td>{{book.isbn}}</td>
+    <td>{{book.price}}</td>
+    <td>{{book.published}}</td>
+    <td>{{book.releaseDate | date:'dd/MM/yy'}}</td>
+    <td><a class="badge text-bg-warning text-decoration-none link-opacity-50-hover" [routerLink]="['/authors', book.author.id, 'detail']">{{book.author.fullName }}</a></td>
+    <td><a class="badge text-bg-primary" [routerLink]="['/editorials', book.editorial.id, 'detail']">{{book.editorial.name }}</a></td>
+    <td><button  class="btn btn-info" [routerLink]="['/books', book.id, 'detail']">Ver libro</button>
+        <button  class="btn btn-success ms-2" [routerLink]="['/books', book.id, 'update']">Editar libro</button>
+        <button  class="btn btn-warning ms-2" [routerLink]="['/books', book.id, 'reserve']">Reservar libro</button>
+        <button class="btn btn-danger ms-2" (click)="delete(book)">Borrar libro</button></td>
+    </tr>
+    }@empty {
+        <p>No hay libros</p>}
+    
+    </tbody>
+    </table>
+    
+    </div>
+    </div>
+    </div>

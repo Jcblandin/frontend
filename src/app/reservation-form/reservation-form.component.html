@@ -1,0 +1,125 @@
+
+<div class="container" style="max-width:960px;">
+  <main>
+    <div class="py-5 text-center">
+      <img class="d-block mx-auto mb-4" src="/assets/img/shopcart.svg" alt="" width="72" height="57">
+      @if (book) {
+        <h2>Reserva de libro {{book.id}}</h2>
+      } @else {
+        <h2>Reserva de libro</h2>
+      }
+
+      <p class="lead">Selecciona los datos de tu reserva para poder completarla.</p>
+    </div>
+
+    <div class="row g-5">
+      <div class="col-md-5 col-lg-4 order-md-last">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-primary">Precios</span>
+          <span class="badge bg-primary rounded-pill">{{numDays}} días</span>
+        </h4>
+        
+        <ul class="list-group mb-3">
+          @if(bookPrice>0){
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">Precio por días</h6>
+              <small class="text-body-secondary"> {{numDays}} x {{book?.price}}</small>
+            </div>
+            <span class="text-body-secondary">{{bookPrice | currency: 'EUR':'symbol':'1.2-2'}}</span>
+          </li>
+        }
+        @if(reservationForm.get('isPremiumShip')?.value){
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">Gastos de envío</h6>
+              <small class="text-body-secondary">Servicio de envío y seguimiento</small>
+            </div>
+            <span class="text-body-secondary">{{shipPrice}}</span>
+          </li>
+        }
+        @if(extraPrice>0){
+          <li class="list-group-item d-flex justify-content-between lh-sm">
+            <div>
+              <h6 class="my-0">Servicio de audiolibro</h6>
+              <small class="text-body-secondary">Contenido premium digital</small>
+            </div>
+            <span class="text-body-secondary">{{extraPrice}}</span>
+          </li>
+        }
+          <li class="list-group-item d-flex justify-content-between bg-body-tertiary">
+            <div class="text-success">
+              <h6 class="my-0">Promo code</h6>
+              <small>EXAMPLECODE</small>
+            </div>
+            <span class="text-success">0</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Total (EUR)</span>
+            <strong>{{totalPrice | currency: 'EUR':'symbol':'1.2-2'}}</strong>
+          </li>
+        </ul>
+
+        <form class="card p-2">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Promo code">
+            <button type="submit" class="btn btn-secondary">Redeem</button>
+          </div>
+        </form>
+      </div>
+      <div class="col-md-7 col-lg-8">
+        <h4 class="mb-3">Datos de la reserva</h4>
+        @if(showFinishMessage){
+<ngb-alert type="success" [dismissible]="false" style="min-height:150px;" class="my-5">
+  Reserva completada con éxito
+  <br>El localizador de tu reserva es {{reservation?.id}}
+  <br>Tu pedido será enviado en las próximas horas. Para soporte contacte con <a href="mailto:spam@certidevs.com"></a>
+  spam&commat;certidevs.com
+  <button class="w-100 btn btn-primary btn-lg mg-5 mt-5" type="submit" routerLink="/books">Volver al listado de libros</button>
+</ngb-alert>
+        }@else{
+        <form class="needs-validation" novalidate="" [formGroup]="reservationForm" (submit)="save()">
+
+          <!-- Aquí iran las fechas -->
+          <div class="form-floating mb-3">
+            <input type="date" class="form-control" id="startDate"
+            formControlName="startDate" placeholder="yyyy-mm-dd" (change)="calculatePrice()">
+            <label for ="startDate">Fecha inicio</label>
+          </div>
+
+          <div class="form-floating mb-3">
+            <input type="date" class="form-control" id="finishtDate"
+            formControlName="finishDate" placeholder="yyyy-mm-dd" (change)="calculatePrice()">
+            <label for ="finishDate">Fecha fin</label>
+          </div>
+          <hr class="my-4">
+
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="isPremiumShip"
+            formControlName="isPremiumShip" (change)="calculatePrice()">
+            <label class="form-check-label" for="isPremiumShip">Envío premium (menos de 24 h.)</label>
+          </div>
+
+          
+
+          <hr class="my-4">
+
+          <!-- selector de extras o packs-->
+          <div class="form floatin mb-3">
+            <select class="form-select"  id="extraService" formControlName="extraService" (change)="calculatePrice()">
+              <option value="0">Sin extras</option>
+              <option value="20">Audiolibro (20 €)</option>
+              <option value="50">Audilibro + visita guiada</option>
+            </select>
+            <label for="extraService">Pack servicio extra</label>
+
+          </div>
+
+          <button class="w-100 btn btn-primary btn-lg mg-5" type="submit">Finalizar la reserva</button>
+        </form>
+      }
+      </div>
+    </div>
+  </main>
+
+</div>
